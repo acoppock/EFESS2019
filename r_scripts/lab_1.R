@@ -50,12 +50,22 @@ head(dat)
 
 # Estimate ----------------------------------------------------------------
 
-fit <- difference_in_means(Y ~ Z, data = dat)
-tidy(fit)
+# by hand
+dat %>%
+  summarize(
+    # Difference-in-means estimator
+    ate_hat = mean(Y[Z == 1]) - mean(Y[Z == 0]),
+    # Standard error estimator (eq. 3.6)
+    se_ate_hat = sqrt(var(Y[Z == 1])/sum(Z == 1) + var(Y[Z == 0])/sum(Z == 0))
+  )
+
+
+fit_dim <- difference_in_means(Y ~ Z, data = dat)
+tidy(fit_dim)
 
 # exactly identical!
-fit <- lm_robust(Y ~ Z, data = dat)
-tidy(fit)
+fit_ols <- lm_robust(Y ~ Z, data = dat)
+tidy(fit_ols)
 
 # Simulate a sampling distribution ----------------------------------------
 
